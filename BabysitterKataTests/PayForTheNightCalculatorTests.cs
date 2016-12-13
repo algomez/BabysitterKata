@@ -37,11 +37,20 @@ namespace BabysitterKata.Tests
                 calculator.GetStartTime();
 
                 Assert.AreEqual(StartTimePrompt, consoleOutput.GetOuput());
+
             }
 
             Assert.AreEqual(currentConsoleOut, Console.Out);
 
             //Assert.IsTrue(calculator.GetThreadState() == System.Diagnostics.ThreadState.Wait && calculator.GetWaitReason() == ThreadWaitReason.UserRequest);
+        }
+
+        [TestMethod()]
+        public void GetThreadStateMethodReturnsCorrectThreadState()
+        {
+            PayForTheNightCalculator calculator = new PayForTheNightCalculator();
+
+            Assert.Equals(calculator.GetThreadState(), System.Diagnostics.ThreadState.Running);
         }
     }
 }
