@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Diagnostics;
+using ConsoleLogger.Tests;
 
 namespace BabysitterKata.Tests
 {
@@ -27,7 +28,20 @@ namespace BabysitterKata.Tests
 
             calculator.GetStartTime();
 
-            Assert.IsTrue(calculator.GetThreadState() == System.Diagnostics.ThreadState.Wait && calculator.GetWaitReason() == ThreadWaitReason.UserRequest);
+            var StartTimePrompt = "Please enter start time: ";
+
+            var currentConsoleOut = Console.Out;
+
+            using (var consoleOutput = new ConsoleOutput())
+            {
+                calculator.GetStartTime();
+
+                Assert.AreEqual(StartTimePrompt, consoleOutput.GetOuput());
+            }
+
+            Assert.AreEqual(currentConsoleOut, Console.Out);
+
+            //Assert.IsTrue(calculator.GetThreadState() == System.Diagnostics.ThreadState.Wait && calculator.GetWaitReason() == ThreadWaitReason.UserRequest);
         }
     }
 }

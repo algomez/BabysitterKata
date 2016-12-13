@@ -15,7 +15,7 @@ namespace BabysitterKata
 
         public void GetStartTime()
         {
-            throw new NotImplementedException();
+            
         }
 
         public ThreadState GetThreadState()
