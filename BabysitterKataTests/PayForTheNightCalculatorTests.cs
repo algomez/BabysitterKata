@@ -27,7 +27,7 @@ namespace BabysitterKata.Tests
 
             calculator.GetStartTime();
 
-            Assert.IsTrue(calculator.GetThreadState() == ThreadState.Wait && calculator.GetWaitReason() == ThreadWaitReason.UserRequest);
+            Assert.IsTrue(calculator.GetThreadState() == System.Diagnostics.ThreadState.Wait && calculator.GetWaitReason() == ThreadWaitReason.UserRequest);
         }
     }
 }
