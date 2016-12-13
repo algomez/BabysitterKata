@@ -16,7 +16,7 @@ namespace BabysitterKata.Tests
         [TestMethod()]
         public void PayForTheNightCalculatorConstructorTest()
         {
-            PayForTheNightCalculator calculator = new PayForTheNightCalculator();
+            TestingCalculator calculator = new TestingCalculator();
 
             Assert.IsNotNull(calculator);
         }
@@ -24,9 +24,7 @@ namespace BabysitterKata.Tests
         [TestMethod()]
         public void CalculatorAsksForInput()
         {
-            PayForTheNightCalculator calculator = new PayForTheNightCalculator();
-
-            calculator.GetStartTime();
+            TestingCalculator calculator = new TestingCalculator();
 
             var StartTimePrompt = "Please enter start time: ";
 
@@ -37,10 +35,7 @@ namespace BabysitterKata.Tests
                 calculator.GetStartTime();
 
                 Assert.AreEqual(StartTimePrompt, consoleOutput.GetOuput());
-
             }
-
-            Assert.AreEqual(currentConsoleOut, Console.Out);
 
             //Assert.IsTrue(calculator.GetThreadState() == System.Diagnostics.ThreadState.Wait && calculator.GetWaitReason() == ThreadWaitReason.UserRequest);
         }

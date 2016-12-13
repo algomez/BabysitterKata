@@ -7,22 +7,22 @@ using System.Threading;
 
 namespace BabysitterKata
 {
-    public class PayForTheNightCalculator : CalculatorInterface
+    public class TestingCalculator : CalculatorInterface
     {
         Int32 StartTime;
 
         public Thread CurrentWork;
 
-        public PayForTheNightCalculator()
+        public List<String> LinesToRead = new List<String>();
+
+        public TestingCalculator()
         {
             CurrentWork = new Thread(GetStartTime);
         }
 
         public void GetStartTime()
         {
-            Console.WriteLine("Please enter start time: ");
-        
-            StartTime = int.Parse(Console.ReadLine());
+            Console.Write("Please enter start time: ");
         }
 
         public System.Diagnostics.ThreadState GetThreadState()
