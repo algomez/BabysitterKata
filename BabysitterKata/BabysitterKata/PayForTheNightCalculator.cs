@@ -9,7 +9,9 @@ namespace BabysitterKata
 {
     public class PayForTheNightCalculator : CalculatorInterface
     {
-        Int32 StartTime, EndTime;
+        Int32 StartTime, EndTime, BedTime;
+
+        Int32 StartToBedTimePay = 12, BedTimeToMidNightPay = 8, MidnightToEndPay = 16;
 
         String PayForTheNight;
 
@@ -64,9 +66,9 @@ namespace BabysitterKata
             return EndTime;
         }
 
-        public int CalculateStartToBedTimePay(int v)
+        public Int32 CalculateStartToBedTimePay(Int32 Hours)
         {
-            throw new NotImplementedException();
+            return Hours * StartToBedTimePay;
         }
     }
 }
