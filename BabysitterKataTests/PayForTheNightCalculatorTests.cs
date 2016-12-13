@@ -11,9 +11,11 @@ namespace BabysitterKata.Tests
     public class PayForTheNightCalculatorTests
     {
         [TestMethod()]
-        public void PayForTheNightCalculatorTest()
+        public void PayForTheNightCalculatorConstructorTest()
         {
-            throw new NotImplementedException();
+            PayForTheNightCalculator calculator = new PayForTheNightCalculator();
+
+            Assert.IsNotNull(calculator);
         }
     }
 }
