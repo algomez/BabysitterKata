@@ -3,58 +3,67 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace BabysitterKata
 {
     public class PayForTheNightCalculator : CalculatorInterface
     {
-        Int32 StartTime, EndTime, BedTime, EarliestStart = 1700, LatestEnd = 400;
+        Regex TimeFormat = new Regex(@"^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
 
-        Int32 StartToBedTimePay = 12, BedTimeToMidNightPay = 8, MidnightToEndPay = 16;
+        TimeSpan StartTime, EndTime, BedTime;
 
-        String PayForTheNight;
+        TimeSpan EarliestStart = new TimeSpan(17, 0, 0);
 
-        public Thread StartTimeThread, EndTimeThread;
+        TimeSpan LatestEnd = new TimeSpan(4, 0, 0);
 
-        public PayForTheNightCalculator()
+        Int32 StartToBedTimeWage = 12, BedTimeToMidNightWage = 8, MidnightToEndWage = 16;
+
+        public String PayForTheNight;
+
+        public void ComputePayForTheNight()
         {
-            StartTimeThread = new Thread(GetStartTimeFromUser);
+            PayForTheNight = (CalculateBedTimeToMidnightPay(CalculateBedTimeToMidnightHours()) + CalculateMidnightToEndPay(CalculateMidnightToEndHours()) + CalculateStartToBedTimePay(CalculateStartToBedTimeHours())).ToString("C");
+        }
 
-            EndTimeThread = new Thread(GetEndTimeFromUser);
+        public void SetStartTime(TimeSpan Time)
+        {
+            StartTime = Time;
+        }
+
+        public void SetEndTime(TimeSpan Time)
+        {
+            EndTime = Time;
+        }
+
+        public void SetBedTime(TimeSpan Time)
+        {
+            BedTime = Time;
         }
 
         public void GetStartTimeFromUser()
         {
             String InputText;
 
+            Console.WriteLine("Please enter start time (24-hour HH:mm): ");
+
             while (true)
             {
-                Console.WriteLine("Please enter start time (24-hour format): ");
-
                 InputText = Console.ReadLine();
 
-                if(!Int32.TryParse(InputText, out StartTime))
+                if(!TimeFormat.IsMatch(InputText))
                 {
-                    StartTime = 0;
+                    Console.WriteLine("Incorrect format. Please try again");
 
-                    break;
+                    continue;
                 }
 
-                if(StartTime >= 2400 || StartTime < 0)
+                StartTime = TimeSpan.Parse(InputText);
+
+                if(StartTime < EarliestStart)
                 {
-                    Console.WriteLine("Invalid format for time. Try again.");
-
-                    StartTime = 0;
-
-                    break;
-                }
-
-                if (StartTime < EarliestStart)
-                {
-                    Console.WriteLine("Start time cannot be earlier than 5:00PM.");
-
-                    StartTime = 0;
+                    Console.WriteLine("Start time cannot be earlier than 5:00PM. Please try again.");
                 }
                 else
                 {
@@ -65,52 +74,101 @@ namespace BabysitterKata
 
         public void GetEndTimeFromUser()
         {
-            Console.WriteLine("Please enter end time (24-hour format): ");
+            String InputText;
 
-            EndTime = int.Parse(Console.ReadLine());
+            Console.WriteLine("Please enter end time (24-hour HH:mm): ");
+
+            while (true)
+            {               
+                InputText = Console.ReadLine();
+
+                if (!TimeFormat.IsMatch(InputText))
+                {
+                    Console.WriteLine("Incorrect format. Please try again");
+
+                    continue;
+                }
+
+                EndTime = TimeSpan.Parse(InputText);
+
+                if(EndTime > LatestEnd)
+                {
+                    Console.WriteLine("End time cannot be later than 4:00AM. Please try again.");
+                }
+                else
+                {
+                    return;
+                }
+            }
         }
 
-        public System.Threading.ThreadState GetThreadState(String WhichThread)
+        public void GetBedTimeFromUser()
         {
-            if (WhichThread.Equals("Start", StringComparison.CurrentCultureIgnoreCase))
-            {
-                return StartTimeThread.ThreadState;
-            }
-            else if (WhichThread.Equals("End", StringComparison.CurrentCultureIgnoreCase))
-            {
-                return EndTimeThread.ThreadState;
-            }
-            else
-            {
-                Console.WriteLine("Thread type not recognized for GetThreadState(). Returning 'Stopped' by default.");
+            String InputText;
 
-                return System.Threading.ThreadState.Stopped;
+            Console.WriteLine("Please enter bed time (24-hour HH:mm): ");
+
+            while (true)
+            {
+                InputText = Console.ReadLine();
+
+                if (!TimeFormat.IsMatch(InputText))
+                {
+                    Console.WriteLine("Incorrect format. Please try again");
+
+                    continue;
+                }
+
+                BedTime = TimeSpan.Parse(InputText);
+
+                return;
             }
         }
 
-        public Int32 GetStartTimeFromMemory()
+        public TimeSpan GetStartTimeFromMemory()
         {
             return StartTime;
         }
 
-        public Int32 GetEndTimeFromMemory()
+        public TimeSpan GetEndTimeFromMemory()
         {
             return EndTime;
         }
 
+        public Int32 CalculateStartToBedTimeHours()
+        {
+            Int32 Minutes = BedTime.Minutes + StartTime.Minutes;
+
+            TimeSpan StartToBed = BedTime.Subtract(StartTime);
+
+            return (Int32)Math.Ceiling(((StartToBed.TotalMinutes + Minutes) / 60));
+        }
+
         public Int32 CalculateStartToBedTimePay(Int32 Hours)
         {
-            return Hours * StartToBedTimePay;
+            TimeSpan StartToBed = BedTime.Subtract(StartTime);
+
+            return Hours * StartToBedTimeWage;
+        }
+
+        public Int32 CalculateBedTimeToMidnightHours()
+        {
+            return Math.Abs((Int32)Math.Ceiling((1440 - BedTime.TotalMinutes) / 60));
         }
 
         public Int32 CalculateBedTimeToMidnightPay(Int32 Hours)
         {
-            return Hours * BedTimeToMidNightPay;
+            return Hours * BedTimeToMidNightWage;
+        }
+
+        public Int32 CalculateMidnightToEndHours()
+        {
+            return Math.Abs((Int32)Math.Ceiling(EndTime.TotalMinutes / 60));
         }
 
         public Int32 CalculateMidnightToEndPay(Int32 Hours)
         {
-            return Hours * MidnightToEndPay;
+            return Hours * MidnightToEndWage;
         }
     }
 }

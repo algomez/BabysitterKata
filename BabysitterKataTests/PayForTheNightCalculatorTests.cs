@@ -15,7 +15,7 @@ namespace BabysitterKata.Tests
     public class PayForTheNightCalculatorTests
     {
         [TestMethod()]
-        public void PayForTheNightCalculatorConstructorTest()
+        public void PayForTheNightCalculatorConstructorReturnsNonNull()
         {
             TestingCalculator calculator = new TestingCalculator();
 
@@ -27,7 +27,7 @@ namespace BabysitterKata.Tests
         {
             TestingCalculator calculator = new TestingCalculator();
 
-            var StartTimePrompt = "Please enter start time (24-hour format): ";
+            var StartTimePrompt = "Please enter start time (24-hour HH:mm): ";
 
             var currentConsoleOut = Console.Out;
 
@@ -40,7 +40,7 @@ namespace BabysitterKata.Tests
 
             Console.Clear();
 
-            var EndTimePrompt = "Please enter end time (24-hour format): ";
+            var EndTimePrompt = "Please enter end time (24-hour HH:mm): ";
 
             using (var consoleOutput = new ConsoleOutput())
             {
@@ -50,28 +50,7 @@ namespace BabysitterKata.Tests
             }
         }
 
-        [TestMethod()]
-        public void GetThreadStateMethodReturnsCorrectThreadState()
-        {
-            PayForTheNightCalculator calculator = new PayForTheNightCalculator();
-
-            Assert.AreEqual(System.Threading.ThreadState.Unstarted, calculator.GetThreadState("Start"));
-
-            calculator.StartTimeThread.Start();
-
-            Assert.AreEqual(System.Threading.ThreadState.Running, calculator.GetThreadState("Start"));
-
-            Assert.AreEqual(System.Threading.ThreadState.Unstarted, calculator.GetThreadState("End"));
-
-            calculator.EndTimeThread.Start();
-
-            Assert.AreEqual(System.Threading.ThreadState.Running, calculator.GetThreadState("End"));
-
-            calculator.StartTimeThread.Abort();
-
-            calculator.EndTimeThread.Abort();
-        }
-
+        
         [TestMethod()]
         public void BabysitterGetsPaidTwelveAnHourFromStartToBedTime()
         {
@@ -113,15 +92,49 @@ namespace BabysitterKata.Tests
         {
             TestingCalculator calculator = new TestingCalculator();
 
-            Assert.IsTrue(calculator.GetStartTimeFromUser("1700"));
+            Assert.IsTrue(calculator.GetStartTimeFromUser("17:00"));
 
-            Assert.IsFalse(calculator.GetStartTimeFromUser("1699"));
+            Assert.IsFalse(calculator.GetStartTimeFromUser("16:59"));
 
-            Assert.IsTrue(calculator.GetStartTimeFromUser("1701"));
+            Assert.IsTrue(calculator.GetStartTimeFromUser("17:01"));
 
-            Assert.IsFalse(calculator.GetStartTimeFromUser("0"));
+            Assert.IsFalse(calculator.GetStartTimeFromUser("00:00"));
 
-            Assert.IsTrue(calculator.GetStartTimeFromUser("2399"));
+            Assert.IsTrue(calculator.GetStartTimeFromUser("23:59"));
+        }
+
+        [TestMethod()]
+        public void EndTimesOutsideRangeAreRejected()
+        {
+            TestingCalculator calculator = new TestingCalculator();
+
+            Assert.IsTrue(calculator.GetEndTimeFromUser("4:00"));
+
+            Assert.IsFalse(calculator.GetEndTimeFromUser("4:01"));
+
+            Assert.IsTrue(calculator.GetEndTimeFromUser("3:59"));
+
+            Assert.IsFalse(calculator.GetEndTimeFromUser("5:00"));
+
+            Assert.IsTrue(calculator.GetEndTimeFromUser("00:00"));
+        }
+
+        [TestMethod()]
+        public void PartialHoursAreRoundedUpForPayCalculation()
+        {
+            PayForTheNightCalculator calculator = new PayForTheNightCalculator();
+
+            calculator.SetStartTime(TimeSpan.Parse("17:59"));
+
+            calculator.SetEndTime(TimeSpan.Parse("0:59"));
+
+            calculator.SetBedTime(TimeSpan.Parse("19:30"));
+
+            Assert.AreEqual(3, calculator.CalculateStartToBedTimeHours());
+
+            Assert.AreEqual(5, calculator.CalculateBedTimeToMidnightHours());
+
+            Assert.AreEqual(1, calculator.CalculateMidnightToEndHours());
         }
     }
 }
