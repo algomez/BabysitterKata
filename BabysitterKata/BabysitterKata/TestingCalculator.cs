@@ -30,7 +30,7 @@ namespace BabysitterKata
             throw new NotImplementedException();
         }
 
-        public ThreadWaitReason GetWaitReason()
+        public ThreadWaitReason GetThreadWaitReason()
         {
             throw new NotImplementedException();
         }

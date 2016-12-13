@@ -11,6 +11,6 @@ namespace BabysitterKata
 
         System.Threading.ThreadState GetThreadState();
 
-        System.Diagnostics.ThreadWaitReason GetWaitReason();
+        System.Diagnostics.ThreadWaitReason GetThreadWaitReason();
     }
 }

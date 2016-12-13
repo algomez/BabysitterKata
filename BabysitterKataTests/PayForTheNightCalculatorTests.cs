@@ -36,8 +36,6 @@ namespace BabysitterKata.Tests
 
                 Assert.AreEqual(StartTimePrompt, consoleOutput.GetOuput());
             }
-
-            //Assert.IsTrue(calculator.GetThreadState() == System.Diagnostics.ThreadState.Wait && calculator.GetWaitReason() == ThreadWaitReason.UserRequest);
         }
 
         [TestMethod()]
@@ -50,6 +48,14 @@ namespace BabysitterKata.Tests
             calculator.CurrentWork.Start();
 
             Assert.AreEqual(System.Threading.ThreadState.Running, calculator.GetThreadState());
+        }
+
+        [TestMethod()]
+        public void GetWaitReasonReturnsCorrectReasonForWait()
+        {
+            PayForTheNightCalculator calculator = new PayForTheNightCalculator();
+
+            Assert.AreEqual(System.Diagnostics.ThreadWaitReason.UserRequest, calculator.GetThreadWaitReason());
         }
     }
 }

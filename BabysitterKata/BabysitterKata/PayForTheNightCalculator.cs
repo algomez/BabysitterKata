@@ -30,7 +30,7 @@ namespace BabysitterKata
             return CurrentWork.ThreadState;
         }
 
-        public ThreadWaitReason GetWaitReason()
+        public ThreadWaitReason GetThreadWaitReason()
         {
             throw new NotImplementedException();
         }
