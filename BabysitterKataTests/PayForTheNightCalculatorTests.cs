@@ -70,5 +70,17 @@ namespace BabysitterKata.Tests
 
             calculator.EndTimeThread.Abort();
         }
+
+        [TestMethod()]
+        public void BabysitterGetsPaidTwelveAnHourFromStartToBedTime()
+        {
+            PayForTheNightCalculator calculator = new PayForTheNightCalculator();
+
+            Assert.AreEqual(12, calculator.CalculateStartToBedTimePay(1));
+
+            Assert.AreEqual(24, calculator.CalculateStartToBedTimePay(2));
+
+            Assert.AreEqual(0, calculator.CalculateStartToBedTimePay(0));
+        }
     }
 }

@@ -63,5 +63,10 @@ namespace BabysitterKata
         {
             return EndTime;
         }
+
+        public int CalculateStartToBedTimePay(int v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
