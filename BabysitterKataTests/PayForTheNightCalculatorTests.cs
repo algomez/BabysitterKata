@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Diagnostics;
 
 namespace BabysitterKata.Tests
 {
@@ -16,6 +18,16 @@ namespace BabysitterKata.Tests
             PayForTheNightCalculator calculator = new PayForTheNightCalculator();
 
             Assert.IsNotNull(calculator);
+        }
+
+        [TestMethod()]
+        public void CalculatorAsksForInput()
+        {
+            PayForTheNightCalculator calculator = new PayForTheNightCalculator();
+
+            calculator.GetStartTime();
+
+            Assert.IsTrue(calculator.GetThreadState() == ThreadState.Wait && calculator.GetWaitReason() == ThreadWaitReason.UserRequest);
         }
     }
 }
