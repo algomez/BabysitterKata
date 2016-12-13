@@ -7,10 +7,6 @@ namespace BabysitterKata
 {
     interface CalculatorInterface
     {
-        void GetStartTime();
-
-        System.Threading.ThreadState GetThreadState();
-
-        System.Diagnostics.ThreadWaitReason GetThreadWaitReason();
+        void GetStartTimeFromUser();
     }
 }

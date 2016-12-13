@@ -32,9 +32,20 @@ namespace BabysitterKata.Tests
 
             using (var consoleOutput = new ConsoleOutput())
             {
-                calculator.GetStartTime();
+                calculator.GetStartTimeFromUser();
 
                 Assert.AreEqual(StartTimePrompt, consoleOutput.GetOuput());
+            }
+
+            Console.Clear();
+
+            var EndTimePrompt = "Please enter end time: ";
+
+            using (var consoleOutput = new ConsoleOutput())
+            {
+                calculator.GetEndTimeFromUser();
+
+                Assert.AreEqual(EndTimePrompt, consoleOutput.GetOuput());
             }
         }
 
@@ -43,19 +54,21 @@ namespace BabysitterKata.Tests
         {
             PayForTheNightCalculator calculator = new PayForTheNightCalculator();
 
-            Assert.AreEqual(System.Threading.ThreadState.Unstarted, calculator.GetThreadState());
+            Assert.AreEqual(System.Threading.ThreadState.Unstarted, calculator.GetThreadState("Start"));
 
-            calculator.CurrentWork.Start();
+            calculator.StartTimeThread.Start();
 
-            Assert.AreEqual(System.Threading.ThreadState.Running, calculator.GetThreadState());
-        }
+            Assert.AreEqual(System.Threading.ThreadState.Running, calculator.GetThreadState("Start"));
 
-        [TestMethod()]
-        public void GetWaitReasonReturnsCorrectReasonForWait()
-        {
-            PayForTheNightCalculator calculator = new PayForTheNightCalculator();
+            Assert.AreEqual(System.Threading.ThreadState.Unstarted, calculator.GetThreadState("End"));
 
-            Assert.AreEqual(System.Diagnostics.ThreadWaitReason.UserRequest, calculator.GetThreadWaitReason());
+            calculator.EndTimeThread.Start();
+
+            Assert.AreEqual(System.Threading.ThreadState.Running, calculator.GetThreadState("End"));
+
+            calculator.StartTimeThread.Abort();
+
+            calculator.EndTimeThread.Abort();
         }
     }
 }

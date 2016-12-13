@@ -17,12 +17,17 @@ namespace BabysitterKata
 
         public TestingCalculator()
         {
-            CurrentWork = new Thread(GetStartTime);
+            CurrentWork = new Thread(GetStartTimeFromUser);
         }
 
-        public void GetStartTime()
+        public void GetStartTimeFromUser()
         {
             Console.Write("Please enter start time: ");
+        }
+
+        public void GetEndTimeFromUser()
+        {
+            Console.Write("Please enter end time: ");
         }
 
         public System.Threading.ThreadState GetThreadState()

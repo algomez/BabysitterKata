@@ -9,30 +9,59 @@ namespace BabysitterKata
 {
     public class PayForTheNightCalculator : CalculatorInterface
     {
-        Int32 StartTime;
+        Int32 StartTime, EndTime;
 
-        public Thread CurrentWork;
+        String PayForTheNight;
+
+        public Thread StartTimeThread, EndTimeThread;
 
         public PayForTheNightCalculator()
         {
-            CurrentWork = new Thread(GetStartTime);
+            StartTimeThread = new Thread(GetStartTimeFromUser);
+
+            EndTimeThread = new Thread(GetEndTimeFromUser);
         }
 
-        public void GetStartTime()
+        public void GetStartTimeFromUser()
         {
             Console.WriteLine("Please enter start time: ");
         
             StartTime = int.Parse(Console.ReadLine());
         }
 
-        public System.Threading.ThreadState GetThreadState()
+        public void GetEndTimeFromUser()
         {
-            return CurrentWork.ThreadState;
+            Console.WriteLine("Please enter end time: ");
+
+            EndTime = int.Parse(Console.ReadLine());
         }
 
-        public ThreadWaitReason GetThreadWaitReason()
+        public System.Threading.ThreadState GetThreadState(String WhichThread)
         {
-            throw new NotImplementedException();
+            if (WhichThread.Equals("Start", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return StartTimeThread.ThreadState;
+            }
+            else if (WhichThread.Equals("End", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return EndTimeThread.ThreadState;
+            }
+            else
+            {
+                Console.WriteLine("Thread type not recognized for GetThreadState(). Returning 'Stopped' by default.");
+
+                return System.Threading.ThreadState.Stopped;
+            }
+        }
+
+        public Int32 GetStartTimeFromMemory()
+        {
+            return StartTime;
+        }
+
+        public Int32 GetEndTimeFromMemory()
+        {
+            return EndTime;
         }
     }
 }
