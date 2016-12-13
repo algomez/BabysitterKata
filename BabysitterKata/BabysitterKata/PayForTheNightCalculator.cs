@@ -8,6 +8,8 @@ namespace BabysitterKata
 {
     public class PayForTheNightCalculator
     {
+        Int32 StartTime;
+
         public PayForTheNightCalculator()
         {
 
@@ -15,7 +17,9 @@ namespace BabysitterKata
 
         public void GetStartTime()
         {
-            
+            Console.WriteLine("Please enter start time: ");
+        
+            StartTime = int.Parse(Console.ReadLine());
         }
 
         public ThreadState GetThreadState()
