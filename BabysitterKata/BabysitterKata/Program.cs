@@ -9,6 +9,7 @@ namespace BabysitterKata
     {
         static void Main(string[] args)
         {
+
         }
     }
 }

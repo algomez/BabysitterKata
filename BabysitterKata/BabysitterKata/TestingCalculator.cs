@@ -15,17 +15,51 @@ namespace BabysitterKata
 
         public List<String> LinesToRead = new List<String>();
 
+        public int EarliestStart = 1700;
+
         public TestingCalculator()
         {
-            CurrentWork = new Thread(GetStartTimeFromUser);
+            //CurrentWork = new Thread(GetStartTimeFromUser);
         }
 
         public void GetStartTimeFromUser()
         {
-            Console.Write("Please enter start time: ");
+            Console.Write("Please enter start time (24-hour format): ");
+        }
+
+        public bool GetStartTimeFromUser(String Time)
+        {
+            String InputText = Time;
+
+            while (true)
+            {
+                if (!Int32.TryParse(InputText, out StartTime))
+                {
+                    return false;
+                }
+
+                if (StartTime >= 2400 || StartTime < 0)
+                {
+                    return false;
+                }
+
+                if (StartTime < EarliestStart)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
         }
 
         public void GetEndTimeFromUser()
+        {
+            Console.Write("Please enter end time (24-hour format): ");
+        }
+
+        public void GetEndTimeFromUser(Int32 Time)
         {
             Console.Write("Please enter end time: ");
         }

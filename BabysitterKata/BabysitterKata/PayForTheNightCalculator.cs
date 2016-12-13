@@ -9,7 +9,7 @@ namespace BabysitterKata
 {
     public class PayForTheNightCalculator : CalculatorInterface
     {
-        Int32 StartTime, EndTime, BedTime;
+        Int32 StartTime, EndTime, BedTime, EarliestStart = 1700, LatestEnd = 400;
 
         Int32 StartToBedTimePay = 12, BedTimeToMidNightPay = 8, MidnightToEndPay = 16;
 
@@ -26,14 +26,46 @@ namespace BabysitterKata
 
         public void GetStartTimeFromUser()
         {
-            Console.WriteLine("Please enter start time: ");
-        
-            StartTime = int.Parse(Console.ReadLine());
+            String InputText;
+
+            while (true)
+            {
+                Console.WriteLine("Please enter start time (24-hour format): ");
+
+                InputText = Console.ReadLine();
+
+                if(!Int32.TryParse(InputText, out StartTime))
+                {
+                    StartTime = 0;
+
+                    break;
+                }
+
+                if(StartTime >= 2400 || StartTime < 0)
+                {
+                    Console.WriteLine("Invalid format for time. Try again.");
+
+                    StartTime = 0;
+
+                    break;
+                }
+
+                if (StartTime < EarliestStart)
+                {
+                    Console.WriteLine("Start time cannot be earlier than 5:00PM.");
+
+                    StartTime = 0;
+                }
+                else
+                {
+                    return;
+                }
+            }
         }
 
         public void GetEndTimeFromUser()
         {
-            Console.WriteLine("Please enter end time: ");
+            Console.WriteLine("Please enter end time (24-hour format): ");
 
             EndTime = int.Parse(Console.ReadLine());
         }
@@ -71,9 +103,14 @@ namespace BabysitterKata
             return Hours * StartToBedTimePay;
         }
 
-        public int CalculateBedTimeToMidnightPay(int v)
+        public Int32 CalculateBedTimeToMidnightPay(Int32 Hours)
         {
-            throw new NotImplementedException();
+            return Hours * BedTimeToMidNightPay;
+        }
+
+        public Int32 CalculateMidnightToEndPay(Int32 Hours)
+        {
+            return Hours * MidnightToEndPay;
         }
     }
 }

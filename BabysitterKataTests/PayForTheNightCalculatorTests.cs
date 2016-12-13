@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Diagnostics;
 using ConsoleLogger.Tests;
+using System.Text.RegularExpressions;
 
 namespace BabysitterKata.Tests
 {
@@ -26,7 +27,7 @@ namespace BabysitterKata.Tests
         {
             TestingCalculator calculator = new TestingCalculator();
 
-            var StartTimePrompt = "Please enter start time: ";
+            var StartTimePrompt = "Please enter start time (24-hour format): ";
 
             var currentConsoleOut = Console.Out;
 
@@ -39,7 +40,7 @@ namespace BabysitterKata.Tests
 
             Console.Clear();
 
-            var EndTimePrompt = "Please enter end time: ";
+            var EndTimePrompt = "Please enter end time (24-hour format): ";
 
             using (var consoleOutput = new ConsoleOutput())
             {
@@ -93,6 +94,34 @@ namespace BabysitterKata.Tests
             Assert.AreEqual(16, calculator.CalculateBedTimeToMidnightPay(2));
 
             Assert.AreEqual(0, calculator.CalculateBedTimeToMidnightPay(0));
+        }
+
+        [TestMethod()]
+        public void BabysitterGetsPaidSixteenAnHourFromMidnightToEnd()
+        {
+            PayForTheNightCalculator calculator = new PayForTheNightCalculator();
+
+            Assert.AreEqual(16, calculator.CalculateMidnightToEndPay(1));
+
+            Assert.AreEqual(32, calculator.CalculateMidnightToEndPay(2));
+
+            Assert.AreEqual(0, calculator.CalculateMidnightToEndPay(0));
+        }
+
+        [TestMethod()]
+        public void StartTimesOutsideRangeAreRejected()
+        {
+            TestingCalculator calculator = new TestingCalculator();
+
+            Assert.IsTrue(calculator.GetStartTimeFromUser("1700"));
+
+            Assert.IsFalse(calculator.GetStartTimeFromUser("1699"));
+
+            Assert.IsTrue(calculator.GetStartTimeFromUser("1701"));
+
+            Assert.IsFalse(calculator.GetStartTimeFromUser("0"));
+
+            Assert.IsTrue(calculator.GetStartTimeFromUser("2399"));
         }
     }
 }
