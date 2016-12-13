@@ -9,7 +9,7 @@ namespace BabysitterKata
     {
         void GetStartTime();
 
-        System.Diagnostics.ThreadState GetThreadState();
+        System.Threading.ThreadState GetThreadState();
 
         System.Diagnostics.ThreadWaitReason GetWaitReason();
     }

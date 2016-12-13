@@ -45,7 +45,11 @@ namespace BabysitterKata.Tests
         {
             PayForTheNightCalculator calculator = new PayForTheNightCalculator();
 
-            Assert.Equals(calculator.GetThreadState(), System.Diagnostics.ThreadState.Running);
+            Assert.AreEqual(System.Threading.ThreadState.Unstarted, calculator.GetThreadState());
+
+            calculator.CurrentWork.Start();
+
+            Assert.AreEqual(System.Threading.ThreadState.Running, calculator.GetThreadState());
         }
     }
 }

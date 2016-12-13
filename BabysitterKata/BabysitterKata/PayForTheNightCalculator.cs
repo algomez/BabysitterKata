@@ -25,9 +25,9 @@ namespace BabysitterKata
             StartTime = int.Parse(Console.ReadLine());
         }
 
-        public System.Diagnostics.ThreadState GetThreadState()
+        public System.Threading.ThreadState GetThreadState()
         {
-            throw new NotImplementedException();
+            return CurrentWork.ThreadState;
         }
 
         public ThreadWaitReason GetWaitReason()

@@ -25,7 +25,7 @@ namespace BabysitterKata
             Console.Write("Please enter start time: ");
         }
 
-        public System.Diagnostics.ThreadState GetThreadState()
+        public System.Threading.ThreadState GetThreadState()
         {
             throw new NotImplementedException();
         }
